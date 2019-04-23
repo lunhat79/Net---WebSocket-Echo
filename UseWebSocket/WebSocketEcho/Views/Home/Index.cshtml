@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Echo</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    
+</head>
+<body>
+    <div>
+        Echo using websocket server started...
+    </div>
+    <div id="chatEl"></div>
+    <script>
+        const createEle = React.createElement;
+
+        class ChatComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    msg : "",
+                    listMsg: []
+                };
+
+                this.handleChange = this.handleChange.bind(this);
+                this.handleSend = this.handleSend.bind(this);
+                this.handleMessage = this.handleMessage.bind(this);
+
+                this.ws = new WebSocket("ws://localhost:59987/api/EchoMsg");
+                this.ws.onmessage = this.handleMessage;
+            }
+            handleChange(e) {
+                this.setState({ msg: e.target.value });
+            }
+            handleSend() {
+                this.ws.send(this.state.msg);
+            }
+            handleMessage(evt) {
+                const joined = this.state.listMsg.concat(evt.data);
+                this.setState({ listMsg: joined });
+            }
+            render() {
+                const els = [
+                    createEle("input", { key: "inputMsg", onChange: this.handleChange }),
+                    createEle("button", { key: "inputButton", onClick: this.handleSend }, "Send")
+                ];
+
+                this.state.listMsg.forEach((item, i) => {
+                    els.push(
+                        createEle("div", { key: i }, item)
+                    );
+                });
+
+                return createEle("div", { children: els });
+            }
+        };
+
+        const domContainer = document.querySelector('#chatEl');
+        ReactDOM.render(createEle(ChatComponent), domContainer);
+    </script>
+
+</body>
+</html>
