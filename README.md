@@ -10,8 +10,8 @@ And SignalR also support for browser those do not have websocket client.
 
 ## Project: UseWebSocket
 - Use microsoft websocket, implement as a API. 
-- I use inline ReactJS as client. 
+- I use inline ReactJS and html5 WebSocket. (Assume browser support websocket)
 - Need websocket supported browser like chrome to run.
 
-##Project : UseSignalR
+## Project: UseSignalR
 
